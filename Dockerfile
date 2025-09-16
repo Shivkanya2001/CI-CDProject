@@ -1,13 +1,10 @@
-FROM node:lts-alpine
+FROM node:lts
 
 WORKDIR /app
 ENV HOST=0.0.0.0
 ENV PORT=3000
 
-RUN addgroup --system api && adduser --system -G api api
-
-# Install OpenSSL 1.1 compatibility for Prisma
-RUN apk add --no-cache openssl1.1-compat
+RUN addgroup --system api && adduser --system --ingroup api api
 
 COPY dist/api api
 COPY src/prisma ./api/prisma

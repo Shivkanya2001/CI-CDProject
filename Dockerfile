@@ -16,9 +16,8 @@ COPY src/prisma ./api/prisma
 # Install deps (includes @prisma/client)
 RUN npm --prefix api --omit=dev -f install
 
-# Generate Prisma client (inside /app/api)
-
-RUN npx --prefix api prisma generate --schema=prisma/schema.prisma
+# Generate Prisma client (inside /app)
+RUN npx --prefix api prisma generate --schema=./api/prisma/schema.prisma
 
 RUN chown -R api:api .
 

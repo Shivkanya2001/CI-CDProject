@@ -11,14 +11,25 @@ ENV PORT=3000
 
 WORKDIR /app
 
+# Create app user
 RUN addgroup --system api && \
-          adduser --system -G api api
+    adduser --system -G api api
 
+# Copy built application
 COPY dist/api api
+
+# Copy Prisma schema (required for client generation)
+COPY src/prisma ./src/prisma
+
+# Install production dependencies
+RUN npm --prefix api --omit=dev -f install
+
+# Generate Prisma client inside /app/api
+RUN npx --prefix api prisma generate
+
+# Set permissions
 RUN chown -R api:api .
 
-# You can remove this install step if you build with `--bundle` option.
-# The bundled output will include external dependencies.
-RUN npm --prefix api --omit=dev -f install
+USER api
 
 CMD [ "node", "api" ]
